@@ -2,7 +2,6 @@
 <head>  
 <meta charset="UTF-8">  
 <meta name="viewport" content="width=device-width, initial-scale=1.0">  
-  
 <title>เลียที คลิปหลุด หนังโป๊ คลิปหลุดทางบ้าน ดูฟรี </title>
 
 <script type="application/ld+json">
@@ -315,6 +314,142 @@ video:"https://files.catbox.moe/5hpudz.mp4"
   {  
 id:1,  
 title:"คลิปหลุดทางบ้าน คู่รักสุดเด็ดๆ มาตั้งกล้องเย็ดเสียว  เย็ดกันอย่างมันส์ นวดนมโครตดีซอยหีลีลาอย่างแจ่มจัดๆงานโครตดี",  
+cover:"https://files.catbox.moe/agqn1h.jpg",  
+video:"https://files.catbox.moe/f1jga0.mp4"  
+},  
+  
+  {  
+id:1,  
+title:"คลิปโป๊สาววัยรุ่น งานทางบ้าน ไอหนุ่ม.. พารุ่นน้องมาเย็ดที่บ้านเอาควยซอยหีเย็ดกระหน่ำไม่ยั้งเลย",  
+cover:"https://files.catbox.moe/l0trjb.png",  
+video:"https://files.catbox.moe/1ilx58.mp4"  
+},  
+  
+  
+{  
+title:"คลิปโป๊ทางบ้าน วัยรุ่นระยอง โดนแฟนกดหัวอมควยมิดลำเย็ดแล้วควักควยออกมาปากใส่ปาก",  
+cover:"https://files.catbox.moe/wml6fj.jpg",  
+video:"https://files.catbox.moe/j3gpl9.mp4"  
+},  
+    
+{  
+title:"คลิปหลุดทางบ้าน สาวขี้เงี่ยนมาโดนแฟนหนุ่มฝรั่งควยใหญ่ๆ มาจับเย็ดเสียวร่อนเอวโครตแจ่มเย็ดกันอย่างมันส์",  
+cover:"https://files.catbox.moe/y22uve.jpg",  
+video:"https://files.catbox.moe/w5v8tj.mp4"  
+},  
+  
+// ใส่เพิ่มได้ไม่จำกัดแบบนี้  
+  
+  
+]  
+  
+const movieList=document.getElementById("movieList")  
+const pagination=document.getElementById("pagination")  
+const player=document.getElementById("player")  
+const backBtn=document.getElementById("backBtn")  
+const searchBox=document.getElementById("searchBox")  
+  
+let currentPage=1  
+const perPage=20  
+  
+function renderMovies(list){  
+movieList.innerHTML=""  
+const start=(currentPage-1)*perPage  
+const end=start+perPage  
+const pageMovies=list.slice(start,end)  
+  
+pageMovies.forEach((m,index)=>{  
+const div=document.createElement("div")  
+div.className="movie-item"  
+div.onclick=()=>playMovie(start+index)  
+div.innerHTML=`  
+<img src="${m.cover}">  
+<div>${m.title}</div>  
+`  
+movieList.appendChild(div)  
+})  
+  
+renderPagination(list.length)  
+}  
+  
+function renderPagination(total){  
+pagination.innerHTML=""  
+const pages=Math.ceil(total/perPage)  
+if(pages<=1) return  
+  
+for(let i=1;i<=pages;i++){  
+const btn=document.createElement("button")  
+btn.innerText=i  
+if(i===currentPage) btn.classList.add("active")  
+btn.onclick=()=>{  
+currentPage=i  
+renderMovies(movies)  
+}  
+pagination.appendChild(btn)  
+}  
+}  
+  
+renderMovies(movies)  
+  
+function playMovie(index){  
+const movie=movies[index]  
+  
+movieList.style.display="none"  
+pagination.style.display="none"  
+searchBox.style.display="none"  
+player.style.display="block"  
+backBtn.style.display="block"  
+  
+player.innerHTML=`  
+<div class="player-title">${movie.title}</div>  
+  
+<div class="video-wrapper">  
+<img class="video-poster" src="${movie.cover}">  
+<div class="play-btn" onclick="startVideo('${movie.video}')">▶ เล่นวิดีโอ</div>  
+<div class="ad-label" style="display:none;">โฆษณา</div>  
+<video id="mainVideo" playsinline></video>  
+<div class="fullscreen-btn" onclick="toggleFullscreen()">เต็มจอ</div>  
+</div>  
+`  
+}  
+  
+function startVideo(movieUrl){  
+const video=document.getElementById("mainVideo")  
+const poster=document.querySelector(".video-poster")  
+const playBtn=document.querySelector(".play-btn")  
+const adLabel=document.querySelector(".ad-label")  
+  
+poster.style.display="none"  
+playBtn.style.display="none"  
+  
+video.controls=true  
+video.src=adVideo  
+video.play()  
+adLabel.style.display="block"  
+  
+video.onended=()=>{  
+video.src=movieUrl  
+video.play()  
+adLabel.style.display="none"  
+}  
+}  
+  
+function toggleFullscreen(){  
+document.body.classList.toggle("video-fullscreen")  
+}  
+  
+function goHome(){  
+document.body.classList.remove("video-fullscreen")  
+player.innerHTML=""  
+player.style.display="none"  
+movieList.style.display="grid"  
+pagination.style.display="block"  
+searchBox.style.display="block"  
+backBtn.style.display="none"  
+}  
+  
+</script>  </body>  
+</html>title:"คลิปหลุดทางบ้าน คู่รักสุดเด็ดๆ มาตั้งกล้องเย็ดเสียว  เย็ดกันอย่างมันส์ นวดนมโครตดีซอยหีลีลาอย่างแจ่มจัดๆงานโครตดี",  
 cover:"https://files.catbox.moe/agqn1h.jpg",  
 video:"https://files.catbox.moe/f1jga0.mp4"  
 },  
