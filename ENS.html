@@ -1,0 +1,244 @@
+<!DOCTYPE html>  <html lang="th">  
+<head>  
+<meta charset="UTF-8">  
+<meta name="viewport" content="width=device-width, initial-scale=1.0">  
+<title>Video Feed</title>  <style>  
+html,body{  
+margin:0;  
+padding:0;  
+height:100%;  
+background:black;  
+overflow-y:scroll;  
+scroll-snap-type:y mandatory;  
+scroll-behavior:smooth;  
+font-family:sans-serif;  
+}  
+  
+#feed{  
+height:100%;  
+}  
+  
+.video-box{  
+height:100vh;  
+scroll-snap-align:start;  
+scroll-snap-stop:always;  
+display:flex;  
+justify-content:center;  
+align-items:center;  
+position:relative;  
+}  
+  
+video{  
+width:100%;  
+height:100%;  
+object-fit:cover;  
+background:black;  
+}  
+  
+.loading{  
+position:absolute;  
+color:white;  
+font-size:22px;  
+background:rgba(0,0,0,0.6);  
+padding:10px 18px;  
+border-radius:10px;  
+}  
+  
+/* ปุ่ม 3 ขีด */  
+.menu-btn{  
+position:fixed;  
+top:15px;  
+left:15px;  
+z-index:9999;  
+font-size:28px;  
+color:white;  
+cursor:pointer;  
+background:rgba(0,0,0,0.25);  
+padding:6px 10px;  
+border-radius:8px;  
+}  
+  
+/* เมนูด้านข้าง */  
+.sidebar{  
+position:fixed;  
+top:0;  
+left:-260px;  
+width:260px;  
+height:100%;  
+background:#111;  
+z-index:9998;  
+transition:0.3s;  
+padding-top:70px;  
+}  
+  
+.sidebar a{  
+display:block;  
+color:white;  
+padding:18px 25px;  
+text-decoration:none;  
+font-size:18px;  
+border-bottom:1px solid rgba(255,255,255,0.1);  
+}  
+  
+.sidebar a:hover{  
+background:#222;  
+}  
+  
+.sidebar.open{  
+left:0;  
+}  
+</style>  </head>  
+<body>  <div class="menu-btn" onclick="toggleMenu()">☰</div>  <div class="sidebar" id="sidebar">  
+<a href="index.html">หน้าหลัก</a>  
+<a href="นน.html">เรียกน้ำย่อย</a>  
+</div>  <div id="feed"></div>  <script>  
+  
+function toggleMenu(){  
+document.getElementById("sidebar").classList.toggle("open");  
+}  
+  
+let videos = [  
+"https://vt.tiktok.com/ZSmCj2JCg/",  
+"https://vt.tiktok.com/ZSmCjy9ak/",  
+"https://vt.tiktok.com/ZSmCMUFML/",  
+"https://vt.tiktok.com/ZSmCM5G9M/",  
+"https://vt.tiktok.com/ZSmCMHMfh/",  
+"https://vt.tiktok.com/ZSmCMuocy/",  
+"https://vt.tiktok.com/ZSmCrYwMg/",  
+"https://vt.tiktok.com/ZSmCr8qns/",  
+"https://vt.tiktok.com/ZSmCr5PcL/",  
+"https://vt.tiktok.com/ZSmCryaXJ/",  
+"https://vt.tiktok.com/ZSmCr23dx/",  
+"https://vt.tiktok.com/ZSmCr27J6/",  
+"https://vt.tiktok.com/ZSmCrePt6/",  
+"https://vt.tiktok.com/ZSmCr8NwQ/",  
+"https://vt.tiktok.com/ZSmCrsh9p/",  
+"https://vt.tiktok.com/ZSmCr3G7U/",  
+"https://vt.tiktok.com/ZSmCrxR4S/",  
+"https://vt.tiktok.com/ZSmCrxQRN/",  
+"https://vt.tiktok.com/ZSmCrVbAU/",  
+"https://vt.tiktok.com/ZSmCrwHXT/",  
+"https://vt.tiktok.com/ZSmCrsThP/",  
+"https://vt.tiktok.com/ZSmCrc8nH/",  
+"https://vt.tiktok.com/ZSmCrpmaB/",  
+"https://vt.tiktok.com/ZSmCrXuEJ/",  
+"https://vt.tiktok.com/ZSmCrcWsT/",  
+"https://vt.tiktok.com/ZSmChAHFv/"  
+];  
+  
+/* สุ่มคลิป */  
+videos = videos  
+.map(v => ({v, r: Math.random()}))  
+.sort((a,b) => a.r - b.r)  
+.map(v => v.v);  
+  
+const feed = document.getElementById("feed");  
+let videoPlayers = [];  
+  
+async function getVideo(url){  
+try{  
+let res = await fetch("https://tikwm.com/api/?url=" + encodeURIComponent(url));  
+let data = await res.json();  
+if(data?.data?.play) return data.data.play;  
+}catch{}  
+  
+try{  
+let res = await fetch("https://www.tikwm.com/api/?url=" + encodeURIComponent(url));  
+let data = await res.json();  
+if(data?.data?.play) return data.data.play;  
+}catch{}  
+  
+return null;  
+}  
+  
+async function loadVideos(){  
+  
+let first = true;  
+  
+for(let url of videos){  
+  
+let box = document.createElement("div");  
+box.className = "video-box";  
+  
+let video = document.createElement("video");  
+video.muted = true;  
+video.loop = true;  
+video.playsInline = true;  
+video.autoplay = true;  
+video.preload = "auto";  
+  
+let loading = document.createElement("div");  
+loading.className = "loading";  
+loading.innerText = "กำลังโหลด...";  
+  
+box.appendChild(video);  
+box.appendChild(loading);  
+feed.appendChild(box);  
+  
+videoPlayers.push(video);  
+  
+const videoUrl = await getVideo(url);  
+  
+if(videoUrl){  
+video.src = videoUrl;  
+}else{  
+loading.innerText = "โหลดคลิปไม่ได้";  
+continue;  
+}  
+  
+/* เล่นทันที */  
+video.play().catch(()=>{});  
+  
+/* คลิปแรกเล่นพร้อมเสียง */  
+if(first){  
+video.muted = false;  
+video.play().catch(()=>{});  
+first = false;  
+}  
+  
+/* โหลดเสร็จให้ 100 เลย */  
+video.addEventListener("playing",()=>{  
+loading.innerText = "100%";  
+setTimeout(()=>{  
+loading.style.display="none";  
+},150);  
+});  
+  
+observer.observe(video);  
+  
+}  
+  
+}  
+  
+loadVideos();  
+  
+/* เล่นทีละคลิปเหมือน TikTok */  
+const observer = new IntersectionObserver((entries)=>{  
+entries.forEach(entry=>{  
+const video = entry.target;  
+  
+if(entry.isIntersecting){  
+  
+videoPlayers.forEach(v=>{  
+if(v !== video){  
+v.pause();  
+v.currentTime = 0;  
+v.muted = true;  
+}  
+});  
+  
+video.muted = false;  
+video.play().catch(()=>{});  
+  
+}else{  
+video.pause();  
+video.muted = true;  
+}  
+  
+});  
+},{threshold:0.75});  
+  
+</script> 
+
+</body>  
+</html>
